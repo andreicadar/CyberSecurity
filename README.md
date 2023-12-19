@@ -10,6 +10,8 @@ Account link: https://app.hackthebox.com/profile/52133
 
 ## CTFs
 
+### Hack the Box University2023 (university team): 4 out of hundreds of universities
+
 ### Hack the Box CyberApocalipse The Cursed Mission (university team): 27 out of 6483
 
 Sovled 5 challenges:
