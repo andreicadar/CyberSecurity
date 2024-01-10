@@ -8,7 +8,7 @@ Reverse engineering the first binary `biobundle`.
 ![file info](fileInfo.png)
 
 ### Disassembly of main
-![file info](main.png)
+![file info](images/main.png)
 <br>
 We see that the function get_handle returns a handle to an open shared object or executable, because `local_10` is used as an argument in `dlsym`.
 <br>
@@ -17,7 +17,7 @@ The function `dlsym` is not user-defined and according to the `Linux manual page
 After that not much happens, we are prompted to enter a string of at most 127 characters which will be used as a parameter in the function `_` in the shared object. If the output is different than 0 we have untangled the bundle.
 
 ### Disassembly of get_handle
-![file info](getHandle.png)
+![file info](images/getHandle.png)
 <br>
 Using `memfd_create` an anonymous file is created with the name `:^)`.
 <br>
@@ -30,11 +30,11 @@ To get the shared memory object we could either take that hardcoded values and x
 ![file info](readMemFd.png)
 
 ### Disassembly of the shared object
-![file info](extracted.png)
+![file info](images/extracted.png)
 <br>
 There is a string kept in a contiguous memory of 28 bytes but it is assembled back using 8 bytes at a time. The input is compared to this string, which is the flag (see on the left, change endianness) and 1 is returned if they are equal and 0 otherwise. This backs up the final printing logic in main.
 <br>
 <br>
 To check:
 <br>
-![file info](finalFlag.png)
+![file info](images/finalFlag.png)
