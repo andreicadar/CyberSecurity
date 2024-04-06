@@ -1,0 +1,1 @@
+A lot of challenges that I solved do not have the write up here because unfortunately I am very lazy to do a proper markdown write up :( .
