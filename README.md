@@ -3,7 +3,8 @@
 Here I will post my writeups, certifications, awards and tools that I have created.
 
 ## HackTheBox
-
+Completed a lot of modules on HTB Academy [a relative link](HackTheBox/HTB%20Academy%20Student%20Transcript.pdf)
+<br>
 ![servetel10](http://www.hackthebox.eu/badge/image/52133)
 <br>
 Account link: https://app.hackthebox.com/profile/52133
