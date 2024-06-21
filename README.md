@@ -15,7 +15,10 @@ Account link: https://app.hackthebox.com/profile/52133
 
 ### Hack the Box University 2023 (university team): 4 out of hundreds of universities
 
+### Unbreakble Romania Teams 2024: 2 out of 117
+
 ### Hack the Box CyberApocalipse The Cursed Mission (university team): 27 out of 6483
+
 
 Sovled 5 challenges:
 
