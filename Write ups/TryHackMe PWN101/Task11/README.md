@@ -1,4 +1,4 @@
-## MPROTECT
+# MPROTECT
 
 ## Binary information
 
@@ -21,3 +21,13 @@ Decompiling the binary using Ghidra we see that the vulnerability is obvious. Th
 ![vulnerability](images/vulnerability.png)
 
 Since the binary is `statically linked` we know that there is something to do with it. After looking at the symbols we see that we have the function `mprotect` available.
+
+Mprotect is a system call in Linux that changes the permission of a memory region. We can use this to change the permission of the stack to `executable` and then execute our.
+
+Mprotect takes 3 arguments:
+
+- `addr`: The start address of the memory region whose permissions are to be changed.
+- `len`: The length of the memory region whose permissions are to be changed.
+- `prot`: The new permissions for the memory region.
+
+One thing to note is that addr must be page aligned. In this case we assume that the page size is 4096 bytes so at least the last 12 bits of the address must be zero.
