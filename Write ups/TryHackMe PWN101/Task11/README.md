@@ -44,7 +44,7 @@ By following `x86_64` calling convention, the first argument is passed in `rdi`,
 
 So we need to see if we can find the `ROP gadgets` that would help us set these three arguments. Using `ROPgadget` we see that we have the following gadgets:
 
-![ROP gadgets](images/ROPgadgets.png)
+![ROP gadgets](images/ropGadgets.png)
 
 Let's see what we have so far:
 
