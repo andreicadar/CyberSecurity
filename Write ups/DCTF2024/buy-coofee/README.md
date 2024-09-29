@@ -2,7 +2,7 @@
 
 Firstly we run `checksec` on the binary.
 
-![[buy-coofeeImages/Pasted image 20240929131928.png]]
+![](buy-coofeeImages/Pasted image 20240929131928.png)
 
 We see that we have all the important protections enabled. Quite scarry at first sight right?
 
