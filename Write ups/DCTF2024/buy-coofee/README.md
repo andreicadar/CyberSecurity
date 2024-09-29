@@ -2,13 +2,13 @@
 
 Firstly we run `checksec` on the binary.
 
-![](buy-coofeeImages/Pasted image 20240929131928.png)
+![aa](<buy-coofeeImages/Pasted image 20240929131928.png>)
 
 We see that we have all the important protections enabled. Quite scarry at first sight right?
 
 We load up the binary in Ghidra and the execution flow reaches this function, `coffee()`
 
-![[buy-coofeeImages/Pasted image 20240929132209.png]]
+![aa](<buy-coofeeImages/Pasted image 20240929132209.png>)
 
 We see that indeed we have a canary and a buffer of 24 bytes on the stack. But on line `15` we see the vulnerability an `fread()` call that reads up to 80 characters in the buffer (including null bytes).
 
@@ -21,7 +21,7 @@ How do we bypass the stack canary though to redirect the execution flow? Only if
 Luckily we can, on line 12 there is a `printf()` Format String Vulnerability, this allows us to leak contents from the stack including the canary.
 
 By using `%n$lX` we can print the n-th argument passed to `printf()`. Let's look at the calling convention on `x86-64`.
-![[buy-coofeeImages/Pasted image 20240929133412.png]]
+![aa](<buy-coofeeImages/Pasted image 20240929133412.png>)
 
 We see that on Linux we pass the parameters in the following order:
 - RDI
@@ -34,7 +34,7 @@ We see that on Linux we pass the parameters in the following order:
 
 So **RDI** will be at offset 0, **RSI** at offset 1 and so on, this means that the first argument from the stack is at offset 6. Let's take a look at the stack when we enter the `printf()` function.
 
-![[buy-coofeeImages/Pasted image 20240929133657.png]]
+![aa](<buy-coofeeImages/Pasted image 20240929133657.png>)
 
 We see that at `rsp+0x08` we have the 6th argument passed to `printf()`, our string. At `rsp+32` which is the `9th` argument passed to `printf()` we have the stack canary. 
 Moreover at `rbp+0x08` or at `rsp+48` or the `11th` argument on the stack we have the return address of the `printf()` call, which returns in main, in `main+78` to be more specific.
@@ -52,7 +52,7 @@ Following the syscall convention of x86-64 we need to pass the address of `/bin/
 ## Ret2libc
 
 We use `ROPgadget` to find the `pop rdi ; ret` and we find one.
-![[buy-coofeeImages/Pasted image 20240929134909.png]]
+![aa](<buy-coofeeImages/Pasted image 20240929134909.png>)
 We cannot just jump to the gadget's location because remember the binary is compiled as **PIE** enabled. So we need to calculate where to jump based on the leaked `main+78` address and the offset between `main+78` and the gadget in the code.
 
 ```python
@@ -63,7 +63,7 @@ rop_gadget_addr = main78 + 0x81
 
 The script also outputs the address of the `printf()` function from libc and we also received the library used by the challenge (2.31). Using these two we can pinpoint the version used by the binary exactly using **libc-database**. In this case it is `libc6_2.31-0ubuntu9.9_amd64`.
 
-![[buy-coofeeImages/Pasted image 20240929140201.png]]
+![aa](<buy-coofeeImages/Pasted image 20240929140201.png>)
 
 From here we calculate the offsets to the string `/bin/sh` and `system()`.
 ```python
@@ -128,4 +128,4 @@ io.interactive()
 ## Flag
 
 Last we run it on remote and get the flag! :)
-![[buy-coofeeImages/Pasted image 20240929142109.png]]
+![aa](buy-coofeeImages/Pasted image 20240929142109.png>)
