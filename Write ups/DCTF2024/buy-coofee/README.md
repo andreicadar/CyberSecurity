@@ -128,4 +128,4 @@ io.interactive()
 ## Flag
 
 Last we run it on remote and get the flag! :)
-![aa](buy-coofeeImages/Pasted image 20240929142109.png>)
+![aa](<buy-coofeeImages/Pasted image 20240929142109.png>)
