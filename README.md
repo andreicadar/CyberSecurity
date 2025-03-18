@@ -13,6 +13,10 @@ Account link: https://app.hackthebox.com/profile/52133
 
 ## CTFs
 
+### CTF Suceava 2024 1st place
+
+### CTF Suceava 2023 3rd place
+
 ### Hack the Box University 2023 (university team): 4 out of hundreds of universities
 
 ### Unbreakble Romania Teams 2024: 2 out of 117

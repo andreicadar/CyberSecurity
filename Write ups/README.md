@@ -1,1 +1,2 @@
-A lot of challenges that I solved do not have the write up here because unfortunately I am very lazy to do a proper markdown write up :( .
+A lot of challenges that I solved do not have the write up here because unfortunately I am very lazy to do a proper markdown write up :( . <br>
+Have completed all PWN challenged from pwn101 TryHackMe and the classic ROPEmporium. Also a lot from Hack The Box and pwn.college.
